@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 
 echo -n "Enter a sentence: "
 read sentence

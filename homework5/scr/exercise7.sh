@@ -1,6 +1,6 @@
-#!bin/bash
+#!/bin/bash
 
 filename=$1
-lines=$(wc -1 < "$filename")
+lines=$(wc -l < "$filename")
 echo " Number of lines is: $lines"
 

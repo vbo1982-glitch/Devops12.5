@@ -1,10 +1,10 @@
-#!/bin/bash/
+#!/bin/bash
 
 mkdir -p ~/watch
 
 while true; do
 
-    for file ~/watch/*; do
+    for file in  ~/watch/*; do
         if [[ "$file" == *.back ]]; then
 		continue
 	elif [[ -f "$file" ]]; then
@@ -13,4 +13,4 @@ while true; do
         fi
     done
     sleep 5
-gone
+done
