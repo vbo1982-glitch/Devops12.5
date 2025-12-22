@@ -1,0 +1,96 @@
+--- REST API TEST RESULTS ---
+
+1. ОТРИМАТИ ВСІХ НАЯВНИХ СТУДЕНТІВ (GET)
+Status: 200
+Response: []
+
+2. СТВОРИТИ ТРЬОХ СТУДЕНТІВ (POST)
+Creating Ivan... Status: 201
+Response: {'age': '20', 'first_name': 'Ivan', 'id': '1', 'last_name': 'Petrov'}
+Creating Maria... Status: 201
+Response: {'age': '22', 'first_name': 'Maria', 'id': '2', 'last_name': 'Ivanova'}
+Creating Oleg... Status: 201
+Response: {'age': '25', 'first_name': 'Oleg', 'id': '3', 'last_name': 'Sidorov'}
+
+3. ОТРИМАТИ ІНФОРМАЦІЮ ПРО ВСІХ (GET)
+Status: 200
+Response: [
+  {
+    "age": "20",
+    "first_name": "Ivan",
+    "id": "1",
+    "last_name": "Petrov"
+  },
+  {
+    "age": "22",
+    "first_name": "Maria",
+    "id": "2",
+    "last_name": "Ivanova"
+  },
+  {
+    "age": "25",
+    "first_name": "Oleg",
+    "id": "3",
+    "last_name": "Sidorov"
+  }
+]
+
+4. ОНОВИТИ ВІК ДРУГОГО СТУДЕНТА (PATCH ID: 2)
+Status: 200
+Response: {'age': '30', 'first_name': 'Maria', 'id': '2', 'last_name': 'Ivanova'}
+
+5. ОТРИМАТИ ІНФОРМАЦІЮ ПРО ДРУГОГО СТУДЕНТА (GET ID: 2)
+Status: 200
+Response: {'age': '30', 'first_name': 'Maria', 'id': '2', 'last_name': 'Ivanova'}
+
+6. ОНОВИТИ ВСЕ ДЛЯ ТРЕТЬОГО СТУДЕНТА (PUT ID: 3)
+Status: 200
+Response: {'age': '99', 'first_name': 'Oleg_Updated', 'id': '3', 'last_name': 'Sidorov_Updated'}
+
+7. ОТРИМАТИ ІНФОРМАЦІЮ ПРО ТРЕТЬОГО СТУДЕНТА (GET ID: 3)
+Status: 200
+Response: {'age': '99', 'first_name': 'Oleg_Updated', 'id': '3', 'last_name': 'Sidorov_Updated'}
+
+8. ОТРИМАТИ ВСІХ НАЯВНИХ СТУДЕНТІВ (GET)
+Status: 200
+Response: [
+  {
+    "age": "20",
+    "first_name": "Ivan",
+    "id": "1",
+    "last_name": "Petrov"
+  },
+  {
+    "age": "30",
+    "first_name": "Maria",
+    "id": "2",
+    "last_name": "Ivanova"
+  },
+  {
+    "age": "99",
+    "first_name": "Oleg_Updated",
+    "id": "3",
+    "last_name": "Sidorov_Updated"
+  }
+]
+
+9. ВИДАЛИТИ ПЕРШОГО КОРИСТУВАЧА (DELETE ID: 1)
+Status: 200
+Response: {'message': 'Student Ivan Petrov removed'}
+
+10. ОТРИМАТИ ВСІХ НАЯВНИХ СТУДЕНТІВ (GET)
+Status: 200
+Response: [
+  {
+    "age": "30",
+    "first_name": "Maria",
+    "id": "2",
+    "last_name": "Ivanova"
+  },
+  {
+    "age": "99",
+    "first_name": "Oleg_Updated",
+    "id": "3",
+    "last_name": "Sidorov_Updated"
+  }
+]
