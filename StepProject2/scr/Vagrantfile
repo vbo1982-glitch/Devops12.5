@@ -1,0 +1,52 @@
+Vagrant.configure("2") do |config|
+  
+  config.vm.define "Master" do |master|
+    master.vm.box = "ubuntu/jammy64"
+    master.vm.network "private_network", ip: "192.168.56.101"
+    master.vm.network "forwarded_port", guest: 8080, host: 8090   
+    master.vm.provider "virtualbox" do |vb|
+      vb.name = "Master_Jenkins"
+      vb.memory = "4096"
+      vb.cpus = 2
+    end
+
+    master.vm.provision "shell", inline: <<-SHELL
+      apt-get update
+      apt-get install -y ca-certificates curl gnupg lsb-release
+      mkdir -p /etc/apt/keyrings
+      curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+      echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+      apt-get update
+      apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+      usermod -aG docker vagrant
+      docker run -d --name jenkins_server -p 8080:8080 -p 50000:50000 --restart=on-failure -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts
+    SHELL
+  end
+
+  config.vm.define "Slave" do |slave|
+    slave.vm.box = "ubuntu/jammy64"
+    slave.vm.network "private_network", ip: "192.168.56.102"
+    
+    slave.vm.provider "virtualbox" do |vb|
+      vb.name = "Slave_Worker"
+      vb.memory = "2048"
+      vb.cpus = 1
+    end
+
+    slave.vm.provision "shell", inline: <<-SHELL
+      apt-get update
+      
+      apt-get install -y ca-certificates curl gnupg lsb-release
+      mkdir -p /etc/apt/keyrings
+      curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+      echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+      apt-get update
+      apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+      
+      usermod -aG docker vagrant
+
+      apt-get install -y openjdk-17-jre
+    SHELL
+  end
+end
