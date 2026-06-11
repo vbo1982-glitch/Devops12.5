@@ -1,0 +1,17 @@
+# Системні файли Mac
+.DS_Store
+**/.DS_Store
+
+# Службові файли Terraform (включаючи важкі бінарники провайдерів)
+.terraform/
+**/.terraform/
+.terraform.lock.hcl
+**/.terraform.lock.hcl
+*.tfstate
+**/*.tfstate
+*.tfstate.backup
+**/*.tfstate.backup
+
+# Безпека: приватні SSH ключі
+*.pem
+**/*.pem
