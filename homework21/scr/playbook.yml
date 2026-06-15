@@ -1,0 +1,64 @@
+- name: Deploy Nginx using Docker Compose
+  hosts: webservers
+  become: yes
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install required packages
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+        state: present
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu jammy stable
+        state: present
+
+    - name: Install Docker and Docker Compose plugin
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose-plugin
+        state: present
+        update_cache: yes
+
+    - name: Ensure Docker is started and enabled
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Create directory for Nginx project
+      file:
+        path: /opt/nginx
+        state: directory
+
+    - name: Create docker-compose.yml file
+      copy:
+        dest: /opt/nginx/docker-compose.yml
+        content: |
+          version: '3'
+          services:
+            web:
+              image: nginx:latest
+              ports:
+                - "80:80"
+              restart: always
+
+    - name: Run Docker Compose
+      command: docker compose up -d
+      args:
+        chdir: /opt/nginx
