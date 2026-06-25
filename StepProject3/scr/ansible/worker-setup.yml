@@ -1,0 +1,30 @@
+---
+- name: Setup Jenkins Worker
+  hosts: jenkins_worker
+  become: yes
+  tasks:
+    - name: 1. Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: 2. Install Java 17 (Jenkins agent requirement)
+      apt:
+        name: openjdk-17-jre
+        state: present
+
+    - name: 3. Install Docker
+      apt:
+        name: docker.io
+        state: present
+
+    - name: 4. Ensure Docker service is started and enabled
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: 5. Add 'ubuntu' user to 'docker' group
+      user:
+        name: ubuntu
+        groups: docker
+        append: yes
