@@ -3,45 +3,31 @@
   hosts: jenkins_master
   become: yes
   tasks:
-    - name: 1. Deep clean of apt lists and lists.d
-      shell: |
-        rm -rf /var/lib/apt/lists/*
-        rm -f /etc/apt/sources.list.d/jenkins.list
-        rm -f /etc/apt/sources.list.d/jenkins*.list
-
-    - name: 2. Update apt cache
+    - name: 1. Update apt cache and install dependencies
       apt:
         update_cache: yes
-
-    - name: 3. Install dependencies
-      apt:
         name:
-          - openjdk-17-jre
           - wget
           - curl
-          - gnupg
+          - net-tools
         state: present
 
-    - name: 4. Download Jenkins GPG key
-      get_url:
-        url: https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
-        dest: /usr/share/keyrings/jenkins-keyring.asc
-        mode: '0644'
-        force: yes
-
-    - name: 5. Add Jenkins repository correctly
-      copy:
-        content: "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/\n"
-        dest: /etc/apt/sources.list.d/jenkins.list
-        mode: '0644'
-
-    - name: 6. Final apt update and Jenkins install
+    - name: 2. Install Java 17 (Jenkins requirement)
       apt:
-        name: jenkins
+        name: openjdk-17-jre
         state: present
-        update_cache: yes
 
-    - name: 7. Start and enable Jenkins service
+    - name: 3. Download Jenkins .deb package
+      get_url:
+        url: https://get.jenkins.io/debian-stable/jenkins_2.452.3_all.deb
+        dest: /tmp/jenkins_2.452.3_all.deb
+
+    - name: 4. Install Jenkins from .deb
+      apt:
+        deb: /tmp/jenkins_2.452.3_all.deb
+        state: present
+
+    - name: 5. Start and enable Jenkins service
       systemd:
         name: jenkins
         state: started
