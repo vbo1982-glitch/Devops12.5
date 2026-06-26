@@ -9,7 +9,8 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {
-                dir('scr') {
+                
+                dir('StepProject2/scr') {
                     sh 'docker build -t my-node-app .'
                 }
             }
