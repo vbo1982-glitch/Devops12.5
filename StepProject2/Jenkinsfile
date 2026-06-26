@@ -1,0 +1,23 @@
+pipeline {
+    agent { label 'jenkins_worker' }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/vbo1982-glitch/Devops12.5.git'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                dir('scr') {
+                    sh 'docker build -t my-node-app .'
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+            }
+        }
+    }
+}
