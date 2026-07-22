@@ -15,3 +15,5 @@
 # Безпека: приватні SSH ключі
 *.pem
 **/*.pem
+.DS_Store
+minikube-darwin-amd64

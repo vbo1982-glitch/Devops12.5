@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hw24-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: hw24-app
+  template:
+    metadata:
+      labels:
+        app: hw24-app
+    spec:
+      containers:
+      - name: hw24-container
+        image: vitalii911/hw24-app:v1 
+        ports:
+        - containerPort: 8082
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hw24-service
+spec:
+  type: ClusterIP
+  selector:
+    app: hw24-app
+  ports:
+    - protocol: TCP
+      port: 8082
+      targetPort: 8082
