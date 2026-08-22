@@ -1,0 +1,16 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: 'telegram-bot'
+
+receivers:
+  - name: 'telegram-bot'
+    telegram_configs:
+      - bot_token: '8956493501:AAGTRcbONRDCqMSReXzmzWs-uFm8W_UACAU'
+        chat_id: 277494637        
+        parse_mode: 'HTML'
+        message: |
+          <b>🚨 {{ .Status | toUpper }}</b>
+          <b>Алерт:</b> {{ .CommonAnnotations.summary }}
+          <b>Опис:</b> {{ .CommonAnnotations.description }}
