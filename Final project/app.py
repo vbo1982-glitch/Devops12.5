@@ -1,4 +1,5 @@
 import os
+import socket
 import pymysql
 from flask import Flask, request, jsonify
 
@@ -31,24 +32,26 @@ def init_db():
             """)
         conn.commit()
         conn.close()
-        print("Database initialized successfully.")
     except Exception as e:
-        print(f"Warning: Could not initialize database. Error: {e}")
+        print(f"Database init warning: {e}")
+
+@app.route('/', methods=['GET'])
+def get_info():
+    pod_ip = socket.gethostbyname(socket.gethostname())
+    return jsonify({"status": "200 OK", "pod_ip": pod_ip}), 200
 
 @app.route('/users', methods=['POST'])
 def add_user():
     data = request.json
     if not data or 'name' not in data or 'email' not in data:
-        return jsonify({"error": "Missing 'name' or 'email' in request"}), 400
-    
+        return jsonify({"error": "Missing data"}), 400
     try:
         conn = get_db_connection()
         with conn.cursor() as cursor:
-            sql = "INSERT INTO users (name, email) VALUES (%s, %s)"
-            cursor.execute(sql, (data['name'], data['email']))
+            cursor.execute("INSERT INTO users (name, email) VALUES (%s, %s)", (data['name'], data['email']))
         conn.commit()
         conn.close()
-        return jsonify({"message": "User added successfully"}), 201
+        return jsonify({"message": "User added"}), 201
     except pymysql.MySQLError as e:
         return jsonify({"error": str(e)}), 500
 
